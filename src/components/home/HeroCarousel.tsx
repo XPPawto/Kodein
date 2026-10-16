@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
 import { BLUR_DATA_URL } from '@/content/assets';
+import { ARTICLES } from '@/content/articles';
 import { Button } from '@/components/ui/Button';
 import { cn, formatDate } from '@/lib/utils';
 import { useCmsData } from '@/lib/cmsClient';
@@ -17,7 +18,7 @@ export function HeroCarousel() {
   const locale = useLocale() as Locale;
   const t = useTranslations('common');
   const { data } = useCmsData();
-  const slides = data.articles.slice(0, 5);
+  const slides = (data.articles.length > 0 ? data.articles : ARTICLES).slice(0, 5);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 30 }, [
@@ -90,7 +91,18 @@ export function HeroCarousel() {
                     transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                     className="max-w-6xl"
                   >
-                    <div className="inline-flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-widest text-zinc-300">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-md border border-white/15 bg-black/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-300 backdrop-blur-sm">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
+                      <span>
+                        {locale === 'id'
+                          ? 'BAB 01 / 07 • SOROTAN KARYA & KABAR STUDIO KODEIN'
+                          : locale === 'zh'
+                          ? '第 01 / 07 章 • KODEIN 精选案例与最新动态'
+                          : 'CHAPTER 01 / 07 • KODEIN FEATURED WORK & UPDATES'}
+                      </span>
+                    </div>
+
+                    <div className=" flex flex-wrap items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-widest text-zinc-300">
                       <span className="rounded-full bg-brand-red px-3.5 py-1 text-[11px] font-bold text-white">
                         {slide.category === 'press-release'
                           ? t('pressRelease')
@@ -104,9 +116,16 @@ export function HeroCarousel() {
                       {slide.title[locale]}
                     </h1>
 
-                    <div className="mt-8">
+                    <div className="mt-8 flex flex-wrap items-center gap-4">
                       <Button href={detailHref} variant="primary">
                         {t('learnMore')}
+                      </Button>
+                      <Button href="/our-ecosystem" variant="outline">
+                        {locale === 'id'
+                          ? 'Lihat Semua Layanan IT'
+                          : locale === 'zh'
+                          ? '查看全部开发服务'
+                          : 'Explore All IT Services'}
                       </Button>
                     </div>
                   </motion.div>

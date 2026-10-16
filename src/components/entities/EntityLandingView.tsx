@@ -59,7 +59,11 @@ export function EntityLandingView({
         <div className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20 grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <h2 className="text-2xl font-bold text-white">
-              {locale === 'id' ? 'Ikhtisar Layanan' : 'Service Overview'}
+              {locale === 'id'
+                ? 'Ikhtisar Layanan'
+                : locale === 'zh'
+                ? '服务概览'
+                : 'Service Overview'}
             </h2>
           </div>
           <div className="lg:col-span-8 space-y-5 text-base md:text-lg leading-relaxed text-zinc-300">
@@ -74,7 +78,13 @@ export function EntityLandingView({
         <div className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20">
           <SectionHeading
             eyebrow={data.code}
-            title={locale === 'id' ? 'Spesialisasi & Solusi Utama' : 'Core Capabilities & Solutions'}
+            title={
+              locale === 'id'
+                ? 'Spesialisasi & Solusi Utama'
+                : locale === 'zh'
+                ? '核心能力与解决方案'
+                : 'Core Capabilities & Solutions'
+            }
           />
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {data.focusAreas.map((area, idx) => (
@@ -94,10 +104,18 @@ export function EntityLandingView({
 
           <div className="mt-16 flex flex-wrap items-center gap-4">
             <Button href="/help-center" variant="primary">
-              {locale === 'id' ? 'Konsultasikan Proyek Anda' : 'Consult Your Project'}
+              {locale === 'id'
+                ? 'Konsultasikan Proyek Anda'
+                : locale === 'zh'
+                ? '立即咨询您的项目'
+                : 'Consult Your Project'}
             </Button>
             <Button href="/media-center" variant="outline">
-              {locale === 'id' ? 'Lihat Studi Kasus & Berita' : 'Explore Case Studies & News'}
+              {locale === 'id'
+                ? 'Lihat Studi Kasus & Berita'
+                : locale === 'zh'
+                ? '查看客户案例与动态'
+                : 'Explore Case Studies & News'}
             </Button>
           </div>
         </div>

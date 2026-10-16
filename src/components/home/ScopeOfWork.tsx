@@ -22,8 +22,15 @@ export function ScopeOfWork() {
       <div className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20">
         <Reveal>
           <SectionHeading
-            eyebrow={HOME_CONTENT.scopeSection.eyebrow[locale]}
+            eyebrow={`03 / 07 — ${HOME_CONTENT.scopeSection.eyebrow[locale]}`}
             title={HOME_CONTENT.scopeSection.headline[locale]}
+            description={
+              locale === 'id'
+                ? 'Arahkan kursor atau klik salah satu dari 3 fokus layanan di bawah untuk melihat detail paket pengerjaan, teknologi, dan alur kerja.'
+                : locale === 'zh'
+                ? '悬停或点击下方三大核心服务板块，查看详细交付标准、技术栈与开发流程。'
+                : 'Hover or click any of the 3 core service divisions below to inspect deliverables, tech stack, and workflow.'
+            }
           />
         </Reveal>
 

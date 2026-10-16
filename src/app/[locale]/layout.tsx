@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CookieBanner } from '@/components/layout/CookieBanner';
 import { BackToTop } from '@/components/layout/BackToTop';
+import { RouteTransition } from '@/components/layout/RouteTransition';
 import { DESIGN_TOKENS } from '@/lib/tokens';
 import { Locale } from '@/i18n';
 
@@ -106,6 +107,7 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <RouteTransition />
           <Header />
           <main id="main-content" className="flex-1">
             {children}

@@ -16,10 +16,13 @@ export function KodeinMarkSvg({
   className?: string;
   variant?: 'red' | 'coral' | 'gradient' | 'white' | 'black';
 }) {
+  const rawId = React.useId();
+  const gradId = `kodeinPinwheelGrad-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+
   const fillMap = {
     red: '#EE2B10',
     coral: '#FF5526',
-    gradient: 'url(#kodeinPinwheelGrad)',
+    gradient: `url(#${gradId})`,
     white: '#FFFFFF',
     black: '#14110F',
   };
@@ -34,7 +37,7 @@ export function KodeinMarkSvg({
     >
       <defs>
         <linearGradient
-          id="kodeinPinwheelGrad"
+          id={gradId}
           x1="120"
           y1="120"
           x2="392"

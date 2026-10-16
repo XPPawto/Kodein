@@ -5,4 +5,4 @@ Disallow: /id/cms
 Disallow: /en/cms
 Disallow: /zh/cms
 
-Sitemap: [https://www.kodein.id/sitemap.xml](https://www.kodein.id/sitemap.xml)
+Sitemap: https://www.kodein.id/sitemap.xml

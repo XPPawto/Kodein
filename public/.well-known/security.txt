@@ -1,0 +1,7 @@
+Contact: mailto:security@kodein.id
+Contact: https://kodein.id/id/vdp
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: id, en, zh
+Canonical: https://kodein.id/.well-known/security.txt
+Policy: https://kodein.id/id/vdp
+Hiring: https://kodein.id/id/about

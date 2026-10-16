@@ -6,9 +6,9 @@ import { ArrowLeft, Share2, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
 import { Article } from '@/content/types';
-import { ARTICLES } from '@/content/articles';
 import { BLUR_DATA_URL } from '@/content/assets';
 import { formatDate } from '@/lib/utils';
+import { useCmsData } from '@/lib/cmsClient';
 import { Locale } from '@/i18n';
 
 export function ArticleDetailView({
@@ -19,9 +19,10 @@ export function ArticleDetailView({
   locale: Locale;
 }) {
   const t = useTranslations('common');
+  const { data } = useCmsData();
   const [copied, setCopied] = useState(false);
 
-  const related = ARTICLES.filter((a) => a.id !== article.id).slice(0, 3);
+  const related = data.articles.filter((a) => a.id !== article.id).slice(0, 3);
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {

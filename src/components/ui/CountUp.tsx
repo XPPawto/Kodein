@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView, useReducedMotion } from 'framer-motion';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber, formatStatSuffix } from '@/lib/utils';
 import { Locale } from '@/i18n';
 
 interface CountUpProps {
@@ -52,7 +52,7 @@ export function CountUp({
     <span ref={ref} className="tabular-nums">
       {prefix}
       {formatNumber(displayValue, locale)}
-      {suffix}
+      {formatStatSuffix(suffix, locale)}
     </span>
   );
 }

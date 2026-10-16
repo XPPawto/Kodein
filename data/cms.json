@@ -17,7 +17,7 @@
     "en": "it loads fast, never confuses the user, and genuinely makes daily work easier",
     "zh": "打开迅速、操作不繁琐，并且能真正让日常业务工作变得更轻松"
   },
-  "reportsAvailable": false,
+  "reportsAvailable": true,
   "stats": [
     {
       "id": "projects-delivered",

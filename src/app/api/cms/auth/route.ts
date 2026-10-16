@@ -11,6 +11,7 @@ import {
   verifyCsrfOrigin,
   verifyPasswordTimingSafe,
 } from '@/lib/cmsAuth';
+import { recordSecurityEvent, verifyEnterpriseCsrf } from '@/lib/enterpriseSecurity';
 
 export async function GET() {
   const authorized = isRequestAuthorized();
@@ -21,13 +22,20 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!verifyCsrfOrigin(request)) {
+  if (!verifyCsrfOrigin(request) || !verifyEnterpriseCsrf(request, '/api/cms/auth')) {
     return NextResponse.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
   const ip = getClientIp();
   const rate = checkRateLimit(ip);
   if (!rate.allowed) {
+    recordSecurityEvent(
+      'RATE_LIMIT_BLOCKED',
+      'critical',
+      ip,
+      '/api/cms/auth',
+      `CMS login lockout active (${rate.retryAfterSec}s remaining)`
+    );
     return NextResponse.json(
       {
         error: `Terlalu banyak percobaan gagal. Coba lagi dalam ${rate.retryAfterSec} detik.`,
@@ -42,6 +50,13 @@ export async function POST(request: Request) {
 
     if (!verifyPasswordTimingSafe(password)) {
       recordFailedAttempt(ip);
+      recordSecurityEvent(
+        'AUTH_FAILED',
+        'warning',
+        ip,
+        '/api/cms/auth',
+        'Failed administrator password attempt'
+      );
       return NextResponse.json(
         { error: 'Password admin tidak valid.' },
         { status: 401 }
@@ -50,6 +65,14 @@ export async function POST(request: Request) {
 
     clearFailedAttempts(ip);
     const token = createSessionToken();
+
+    recordSecurityEvent(
+      'AUTH_SUCCESS',
+      'info',
+      ip,
+      '/api/cms/auth',
+      'Administrator session authenticated via HMAC-SHA256'
+    );
 
     cookies().set({
       name: CMS_COOKIE_NAME,

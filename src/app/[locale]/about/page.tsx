@@ -8,16 +8,19 @@ import { Locale } from '@/i18n';
 
 export default function AboutPage({ params: { locale } }: { params: { locale: Locale } }) {
   const isId = locale === 'id';
+  const isZh = locale === 'zh';
 
   return (
     <div className="bg-brand-dark pt-32 text-white">
       <section className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20 py-16 md:py-24 border-b border-white/10">
         <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-          {isId ? 'Tentang Kodein' : 'About Kodein'}
+          {isId ? 'Tentang Kodein' : isZh ? '关于 Kodein' : 'About Kodein'}
         </span>
         <h1 className="mt-4 max-w-4xl text-fluid-h1 font-bold">
           {isId
             ? 'Merancang Website & Perangkat Lunak Berkelas Dunia untuk Pertumbuhan Bisnis Modern'
+            : isZh
+            ? '打造世界级网站与定制软件系统，赋能现代企业持续增长'
             : 'Engineering World-Class Websites & Custom Software for Modern Business Growth'}
         </h1>
       </section>
@@ -25,7 +28,7 @@ export default function AboutPage({ params: { locale } }: { params: { locale: Lo
       <section className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20 py-20 grid grid-cols-1 gap-12 lg:grid-cols-2 border-b border-white/10">
         <div className="rounded-2xl border border-white/10 bg-brand-charcoal p-8 md:p-12">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-red">
-            {isId ? 'Visi Kami' : 'Our Vision'}
+            {isId ? 'Visi Kami' : isZh ? '企业愿景' : 'Our Vision'}
           </span>
           <p className="mt-4 text-xl md:text-2xl font-semibold leading-relaxed text-white">
             {ABOUT_PAGE_DATA.vision[locale]}
@@ -34,7 +37,7 @@ export default function AboutPage({ params: { locale } }: { params: { locale: Lo
 
         <div className="rounded-2xl border border-white/10 bg-brand-charcoal p-8 md:p-12">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-red">
-            {isId ? 'Misi Engineering' : 'Engineering Mission'}
+            {isId ? 'Misi Engineering' : isZh ? '工程使命' : 'Engineering Mission'}
           </span>
           <ul className="mt-4 space-y-4 text-zinc-300">
             {ABOUT_PAGE_DATA.missions[locale].map((m, idx) => (
@@ -50,8 +53,14 @@ export default function AboutPage({ params: { locale } }: { params: { locale: Lo
       <section className="bg-brand-light py-24 text-brand-dark">
         <div className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20">
           <SectionHeading
-            eyebrow={isId ? 'Nilai Kerja' : 'Core Values'}
-            title={isId ? 'Prinsip Rekayasa & Kualitas Kodein' : 'Kodein Engineering & Quality Principles'}
+            eyebrow={isId ? 'Nilai Kerja' : isZh ? '核心价值观' : 'Core Values'}
+            title={
+              isId
+                ? 'Prinsip Rekayasa & Kualitas Kodein'
+                : isZh
+                ? 'Kodein 工程与质量准则'
+                : 'Kodein Engineering & Quality Principles'
+            }
             lightMode
           />
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -71,8 +80,14 @@ export default function AboutPage({ params: { locale } }: { params: { locale: Lo
 
       <section className="mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20 py-24">
         <SectionHeading
-          eyebrow={isId ? 'Tim Kepemimpinan' : 'Leadership Team'}
-          title={isId ? 'Para Arsitek & Pemimpin Produk Kodein' : 'Kodein Principal Architects & Product Leaders'}
+          eyebrow={isId ? 'Tim Kepemimpinan' : isZh ? '核心技术团队' : 'Leadership Team'}
+          title={
+            isId
+              ? 'Para Arsitek & Pemimpin Produk Kodein'
+              : isZh
+              ? 'Kodein 首席架构师与产品负责人'
+              : 'Kodein Principal Architects & Product Leaders'
+          }
         />
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {ABOUT_PAGE_DATA.leadership.map((exec) => (

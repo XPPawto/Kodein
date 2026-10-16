@@ -31,7 +31,9 @@ export function AboutIntro() {
       <div className="relative z-10 mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20">
         <Reveal>
           <div className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-            <span className="h-2 w-2 rounded-full bg-brand-red" />
+            <span className="rounded bg-brand-red/15 px-2 py-0.5 font-mono text-[11px] text-brand-red">
+              02 / 07
+            </span>
             <span>{content.eyebrow[locale]}</span>
           </div>
         </Reveal>

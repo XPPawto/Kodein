@@ -43,7 +43,7 @@ export const HOME_CONTENT = {
       en: 'Want to talk directly about an app idea or revamping an outdated website? Our team is happy to map out a scope and cost estimate with zero obligation.',
       zh: '想要直接探讨您的应用创意或旧网站改版方案？我们的技术团队随时为您提供免费的架构建议与费用评估。',
     },
-    reportsAvailable: false,
+    reportsAvailable: true,
   },
   journeySection: {
     eyebrow: { id: 'Perjalanan Kami', en: 'Our Journey', zh: '发展历程' },
@@ -390,7 +390,7 @@ export const ENTITY_DETAILS: Record<'dam' | 'dim' | 'ddmf', EntityDetailData> = 
         'Kodein merancang sistem perangkat lunak yang 100% mengikuti alur kerja nyata di tempat Anda—sehingga staf langsung paham cara memakainya tanpa perlu pelatihan berbulan-bulan.',
       ],
       en: [
-        'Every business operates differently. Off-the-shelf software is often either too rigid or bloated with puluhan menus your team never touches.',
+        'Every business operates differently. Off-the-shelf software is often either too rigid or bloated with dozens of menus your team never touches.',
         'Kodein builds custom software around how your team actually works—so staff can use it confidently on day one without months of training.',
       ],
       zh: [

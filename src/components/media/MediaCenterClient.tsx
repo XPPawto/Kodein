@@ -77,44 +77,66 @@ export function MediaCenterClient() {
         </div>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((art) => {
-          const href =
-            art.category === 'press-release'
-              ? `/media-center/press-releases/${art.slug}`
-              : `/media-center/announcement/${art.slug}`;
+      {items.length === 0 ? (
+        <div className="mt-12 rounded-2xl border border-white/10 bg-brand-charcoal p-12 text-center text-sm text-zinc-400">
+          {locale === 'id'
+            ? 'Tidak ada artikel yang cocok dengan pencarian Anda.'
+            : locale === 'zh'
+            ? '未找到匹配的文章。'
+            : 'No articles matched your search.'}
+        </div>
+      ) : (
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {items.map((art) => {
+            const href =
+              art.category === 'press-release'
+                ? `/media-center/press-releases/${art.slug}`
+                : `/media-center/announcement/${art.slug}`;
 
-          return (
-            <Link className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-brand-charcoal transition hover:border-brand-red/60" href="{href}" key="{art.id}">
-              <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <Image alt="{art.title[locale]}" blurDataURL="{BLUR_DATA_URL}" className="object-cover transition-transform duration-500 group-hover:scale-105" fill placeholder="blur" sizes="(max-width: 768px) 100vw, 33vw" src="{art.image}"/>
-                <span className="absolute left-4 top-4 rounded-full bg-brand-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
-                  {art.category === 'press-release' ? t('pressRelease') : t('announcement')}
-                </span>
-              </div>
-
-              <div className="flex flex-1 flex-col justify-between p-6">
-                <div>
-                  <time className="text-xs font-medium text-zinc-400">
-                    {formatDate(art.date, locale)}
-                  </time>
-                  <h2 className="mt-2 text-lg font-bold text-white group-hover:text-brand-red transition line-clamp-2">
-                    {art.title[locale]}
-                  </h2>
-                  <p className="mt-2 text-sm text-zinc-400 line-clamp-3">
-                    {art.excerpt[locale]}
-                  </p>
+            return (
+              <Link
+                key={art.id}
+                href={href}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-brand-charcoal transition hover:border-brand-red/60"
+              >
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                  <Image
+                    src={art.image}
+                    alt={art.title[locale]}
+                    fill
+                    placeholder="blur"
+                    blurDataURL={BLUR_DATA_URL}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute left-4 top-4 rounded-full bg-brand-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
+                    {art.category === 'press-release' ? t('pressRelease') : t('announcement')}
+                  </span>
                 </div>
 
-                <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-red">
-                  <span>{t('readArticle')}</span>
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"/>
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <time className="text-xs font-medium text-zinc-400">
+                      {formatDate(art.date, locale)}
+                    </time>
+                    <h2 className="mt-2 text-lg font-bold text-white group-hover:text-brand-red transition line-clamp-2">
+                      {art.title[locale]}
+                    </h2>
+                    <p className="mt-2 text-sm text-zinc-400 line-clamp-3">
+                      {art.excerpt[locale]}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-red">
+                    <span>{t('readArticle')}</span>
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       {visibleCount < filtered.length && (
         <div className="mt-12 flex justify-center">

@@ -29,3 +29,13 @@ export function formatNumber(value: number, locale: Locale): string {
 export function sanitizeText(input: string): string {
   return input.replace(/[<>]/g, '');
 }
+
+export function formatStatSuffix(suffix: string | undefined, locale: Locale): string {
+  if (!suffix) return '';
+  if (suffix.trim().toLowerCase() === 'hari') {
+    if (locale === 'en') return ' Days';
+    if (locale === 'zh') return ' 天';
+    return ' Hari';
+  }
+  return suffix;
+}

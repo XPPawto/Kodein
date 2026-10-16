@@ -5,8 +5,15 @@ import { DESIGN_TOKENS } from '@/lib/tokens';
 import { HOME_CONTENT, STATISTICS_DATA } from '@/content/siteData';
 import { ARTICLES } from '@/content/articles';
 import { CmsDatabase } from '@/content/types';
-import { isRequestAuthorized, verifyCsrfOrigin } from '@/lib/cmsAuth';
+import { getClientIp, isRequestAuthorized, verifyCsrfOrigin } from '@/lib/cmsAuth';
 import { sanitizeText } from '@/lib/utils';
+import {
+  checkEnterpriseRateLimit,
+  inspectPayloadForThreats,
+  rateLimitErrorResponse,
+  recordSecurityEvent,
+  verifyEnterpriseCsrf,
+} from '@/lib/enterpriseSecurity';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'cms.json');
 
@@ -44,20 +51,46 @@ function writeDb(data: CmsDatabase) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rate = checkEnterpriseRateLimit(request, 'public_read', '/api/cms');
+  if (!rate.allowed) {
+    return rateLimitErrorResponse(rate);
+  }
+
   const db = readDb();
   return NextResponse.json(db, {
-    headers: { 'Cache-Control': 'no-store' },
+    headers: {
+      'Cache-Control': 'no-store',
+      'X-RateLimit-Limit': String(rate.limit),
+      'X-RateLimit-Remaining': String(rate.remaining),
+    },
   });
 }
 
 export async function PUT(request: Request) {
-  if (!verifyCsrfOrigin(request) || !isRequestAuthorized()) {
+  if (
+    !verifyCsrfOrigin(request) ||
+    !verifyEnterpriseCsrf(request, '/api/cms') ||
+    !isRequestAuthorized()
+  ) {
     return NextResponse.json({ error: 'Unauthorized CMS access' }, { status: 401 });
+  }
+
+  const rate = checkEnterpriseRateLimit(request, 'mutation', '/api/cms');
+  if (!rate.allowed) {
+    return rateLimitErrorResponse(rate);
   }
 
   try {
     const body = await request.json();
+    const inspection = inspectPayloadForThreats(body, request, '/api/cms');
+    if (!inspection.safe) {
+      return NextResponse.json(
+        { error: 'Payload blocked by Kodein Enterprise WAF', code: inspection.threat },
+        { status: 403 }
+      );
+    }
+
     const current = readDb();
 
     const updated: CmsDatabase = {
@@ -76,6 +109,13 @@ export async function PUT(request: Request) {
     };
 
     writeDb(updated);
+    recordSecurityEvent(
+      'CMS_MUTATION',
+      'info',
+      getClientIp(),
+      '/api/cms',
+      'Updated studio profile / statistics via authenticated CMS session'
+    );
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: 'Failed to update CMS data' }, { status: 500 });
@@ -83,22 +123,48 @@ export async function PUT(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!verifyCsrfOrigin(request) || !isRequestAuthorized()) {
+  if (
+    !verifyCsrfOrigin(request) ||
+    !verifyEnterpriseCsrf(request, '/api/cms') ||
+    !isRequestAuthorized()
+  ) {
     return NextResponse.json({ error: 'Unauthorized CMS access' }, { status: 401 });
+  }
+
+  const rate = checkEnterpriseRateLimit(request, 'mutation', '/api/cms');
+  if (!rate.allowed) {
+    return rateLimitErrorResponse(rate);
   }
 
   try {
     const body = await request.json();
+    const inspection = inspectPayloadForThreats(body, request, '/api/cms');
+    if (!inspection.safe) {
+      return NextResponse.json(
+        { error: 'Payload blocked by Kodein Enterprise WAF', code: inspection.threat },
+        { status: 403 }
+      );
+    }
+
     const current = readDb();
 
     if (body.action === 'reset') {
       const seed = getSeedData();
       writeDb(seed);
+      recordSecurityEvent(
+        'CMS_MUTATION',
+        'warning',
+        getClientIp(),
+        '/api/cms',
+        'Reset CMS database to factory defaults'
+      );
       return NextResponse.json(seed);
     }
 
     if (body.article) {
       const art = body.article;
+      const sanitizeArray = (arr: unknown) =>
+        Array.isArray(arr) ? arr.map((item) => sanitizeText(String(item || ''))) : [];
       const cleanArticle = {
         ...art,
         title: {
@@ -111,10 +177,22 @@ export async function POST(request: Request) {
           en: sanitizeText(String(art.excerpt?.en || '')),
           zh: sanitizeText(String(art.excerpt?.zh || '')),
         },
+        content: {
+          id: sanitizeArray(art.content?.id),
+          en: sanitizeArray(art.content?.en),
+          zh: sanitizeArray(art.content?.zh),
+        },
       };
       const updatedArticles = [cleanArticle, ...current.articles];
       const updated = { ...current, articles: updatedArticles };
       writeDb(updated);
+      recordSecurityEvent(
+        'CMS_MUTATION',
+        'info',
+        getClientIp(),
+        '/api/cms',
+        `Published new article: "${cleanArticle.title.id.slice(0, 48)}"`
+      );
       return NextResponse.json(updated);
     }
 
@@ -125,8 +203,17 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  if (!verifyCsrfOrigin(request) || !isRequestAuthorized()) {
+  if (
+    !verifyCsrfOrigin(request) ||
+    !verifyEnterpriseCsrf(request, '/api/cms') ||
+    !isRequestAuthorized()
+  ) {
     return NextResponse.json({ error: 'Unauthorized CMS access' }, { status: 401 });
+  }
+
+  const rate = checkEnterpriseRateLimit(request, 'mutation', '/api/cms');
+  if (!rate.allowed) {
+    return rateLimitErrorResponse(rate);
   }
 
   try {
@@ -141,6 +228,13 @@ export async function DELETE(request: Request) {
       articles: current.articles.filter((a) => a.id !== id),
     };
     writeDb(updated);
+    recordSecurityEvent(
+      'CMS_MUTATION',
+      'warning',
+      getClientIp(),
+      '/api/cms',
+      `Deleted article id="${id}"`
+    );
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 });

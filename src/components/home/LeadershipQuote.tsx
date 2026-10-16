@@ -7,11 +7,14 @@ import { useLocale } from 'next-intl';
 import { HOME_CONTENT } from '@/content/siteData';
 import { ASSETS, BLUR_DATA_URL } from '@/content/assets';
 import { Reveal } from '@/components/ui/Reveal';
+import { useCmsData } from '@/lib/cmsClient';
 import { Locale } from '@/i18n';
 
 export function LeadershipQuote() {
   const locale = useLocale() as Locale;
+  const { data } = useCmsData();
   const quote = HOME_CONTENT.quoteSection;
+  const highlightText = data.quoteHighlight?.[locale] || quote.highlight[locale];
   const sectionRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -43,10 +46,22 @@ export function LeadershipQuote() {
       <div className="relative z-10 mx-auto max-w-container px-6 sm:px-10 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 items-end gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7 pb-20 md:pb-28">
+            <div className="mb-5 inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              <span className="rounded bg-brand-red/15 px-2 py-0.5 font-mono text-[11px] text-brand-red">
+                07 / 07
+              </span>
+              <span>
+                {locale === 'id'
+                  ? 'PRINSIP & KOMITMEN ENGINEERING'
+                  : locale === 'zh'
+                  ? '工程团队承诺与理念'
+                  : 'ENGINEERING PRINCIPLE & COMMITMENT'}
+              </span>
+            </div>
             <blockquote className="text-2xl sm:text-3xl md:text-4xl font-medium leading-snug text-white">
               <span>{quote.beforeHighlight[locale]}</span>
               <strong className="font-extrabold text-brand-red">
-                {quote.highlight[locale]}
+                {highlightText}
               </strong>
               <span>{quote.afterHighlight[locale]}</span>
             </blockquote>

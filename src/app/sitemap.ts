@@ -1,6 +1,22 @@
 import { MetadataRoute } from 'next';
+import fs from 'fs';
+import path from 'path';
 import { DESIGN_TOKENS } from '@/lib/tokens';
 import { ARTICLES } from '@/content/articles';
+import { Article } from '@/content/types';
+
+function getSitemapArticles(): Article[] {
+  try {
+    const dbPath = path.join(process.cwd(), 'data', 'cms.json');
+    if (fs.existsSync(dbPath)) {
+      const parsed = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      if (Array.isArray(parsed.articles)) return parsed.articles;
+    }
+  } catch {
+    // Fallback to static articles
+  }
+  return ARTICLES;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = DESIGN_TOKENS.brand.domain;
@@ -28,7 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
-  const articleEntries = ARTICLES.flatMap((article) =>
+  const articles = getSitemapArticles();
+  const articleEntries = articles.flatMap((article) =>
     (['id', 'en', 'zh'] as const).map((locale) => {
       const folder = article.category === 'press-release' ? 'press-releases' : 'announcement';
       return {

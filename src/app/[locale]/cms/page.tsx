@@ -574,6 +574,7 @@ export default function CmsPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-zinc-400">{stat.prefix || ''}</span>
                   <input
+                    key={`${stat.id}-${stat.value}`}
                     type="number"
                     defaultValue={stat.value}
                     onBlur={(e) => handleStatChange(stat.id, Number(e.target.value))}
