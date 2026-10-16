@@ -8,6 +8,7 @@ import { Footer } from '@/components/layout/Footer';
 import { CookieBanner } from '@/components/layout/CookieBanner';
 import { BackToTop } from '@/components/layout/BackToTop';
 import { RouteTransition } from '@/components/layout/RouteTransition';
+import { LiveChatWidget } from '@/components/layout/LiveChatWidget';
 import { DESIGN_TOKENS } from '@/lib/tokens';
 import { Locale } from '@/i18n';
 
@@ -115,6 +116,7 @@ export default async function LocaleLayout({
           <Footer />
           <CookieBanner />
           <BackToTop />
+          <LiveChatWidget />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -13,12 +13,15 @@ import {
   ShieldCheck,
   LogOut,
   AlertTriangle,
+  MessageSquare,
+  Send,
 } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useCmsData } from '@/lib/cmsClient';
 import { ASSETS } from '@/content/assets';
 import { Article, ArticleCategory } from '@/content/types';
 import { Locale } from '@/i18n';
+import type { ChatSession } from '@/app/api/chat/route';
 
 export default function CmsPage() {
   const locale = useLocale() as Locale;
@@ -30,9 +33,16 @@ export default function CmsPage() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<'articles' | 'stats' | 'general'>('articles');
+  const [activeTab, setActiveTab] = useState<'articles' | 'stats' | 'general' | 'livechat'>('articles');
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // LiveChat Admin Inbox State
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [adminReplyText, setAdminReplyText] = useState('');
+  const [adminSenderName, setAdminSenderName] = useState('Engineer Kodein');
+  const [sendingReply, setSendingReply] = useState(false);
 
   // Form tambah artikel
   const [category, setCategory] = useState<ArticleCategory>('press-release');
@@ -83,6 +93,25 @@ export default function CmsPage() {
       setStatementZh(data.aboutStatement.zh);
     }
   }, [authenticated, data]);
+
+  useEffect(() => {
+    if (!authenticated) return;
+    const fetchChats = async () => {
+      try {
+        const res = await fetch('/api/chat?mode=admin', { cache: 'no-store' });
+        if (res.ok) {
+          const json = (await res.json()) as { sessions: ChatSession[] };
+          setChatSessions(json.sessions || []);
+          setSelectedSessionId((prev) => prev || json.sessions?.[0]?.sessionId || null);
+        }
+      } catch {
+        // Ignore transient poll errors
+      }
+    };
+    fetchChats();
+    const timer = setInterval(fetchChats, 4000);
+    return () => clearInterval(timer);
+  }, [authenticated]);
 
   const showNotice = (msg: string) => {
     setToast(msg);
@@ -260,6 +289,49 @@ export default function CmsPage() {
     }
   };
 
+  const handleSendAdminReply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSessionId || !adminReplyText.trim() || sendingReply) return;
+    setSendingReply(true);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'admin_reply',
+          sessionId: selectedSessionId,
+          senderName: adminSenderName.trim() || 'Engineer Kodein',
+          text: adminReplyText.trim(),
+        }),
+      });
+      if (res.ok) {
+        const json = (await res.json()) as { sessions: ChatSession[] };
+        setChatSessions(json.sessions || []);
+        setAdminReplyText('');
+        showNotice('Balasan LiveChat berhasil dikirim ke pengunjung!');
+      }
+    } finally {
+      setSendingReply(false);
+    }
+  };
+
+  const handleDeleteChatSession = async (sid: string) => {
+    const res = await fetch(`/api/chat?sessionId=${encodeURIComponent(sid)}`, {
+      method: 'DELETE',
+    });
+    if (res.ok) {
+      const json = (await res.json()) as { sessions: ChatSession[] };
+      setChatSessions(json.sessions || []);
+      if (selectedSessionId === sid) {
+        setSelectedSessionId(json.sessions?.[0]?.sessionId || null);
+      }
+      showNotice('Sesi percakapan LiveChat dihapus.');
+    }
+  };
+
+  const totalUnreadChats = chatSessions.reduce((acc, s) => acc + (s.unreadAdmin || 0), 0);
+  const activeChatSession = chatSessions.find((s) => s.sessionId === selectedSessionId) || null;
+
   if (checkingSession) {
     return (
       <div className="min-h-screen bg-brand-dark flex items-center justify-center text-zinc-400 text-sm">
@@ -328,7 +400,7 @@ export default function CmsPage() {
             </div>
             <h1 className="mt-2 text-3xl font-bold">CMS Studio Kodein (ID / EN / ZH)</h1>
             <p className="mt-1 text-sm text-zinc-400">
-              Kelola artikel studi kasus, angka statistik, dan informasi kontak Kodein secara langsung.
+              Kelola artikel studi kasus, angka statistik, LiveChat pengunjung, dan informasi kontak Kodein secara langsung.
             </p>
           </div>
 
@@ -398,6 +470,24 @@ export default function CmsPage() {
           >
             <Settings className="h-4 w-4"/>
             <span>Teks Utama & Lokasi</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('livechat')}
+            className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
+              activeTab === 'livechat'
+                ? 'bg-brand-red text-white'
+                : 'bg-brand-charcoal text-zinc-400 hover:text-white'
+            }`}
+          >
+            <MessageSquare className="h-4 w-4"/>
+            <span>LiveChat Masuk ({chatSessions.length})</span>
+            {totalUnreadChats > 0 && (
+              <span className="ml-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-black text-black">
+                {totalUnreadChats} baru
+              </span>
+            )}
           </button>
         </div>
 
@@ -677,6 +767,167 @@ export default function CmsPage() {
               <span>{saving ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
             </button>
           </form>
+        )}
+
+        {activeTab === 'livechat' && (
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
+            {/* Daftar Sesi Pengunjung */}
+            <div className="lg:col-span-4 space-y-3 rounded-2xl border border-white/10 bg-brand-charcoal p-5">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+                  Sesi Percakapan ({chatSessions.length})
+                </h2>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400">
+                  Auto-Sync 4s
+                </span>
+              </div>
+
+              {chatSessions.length === 0 ? (
+                <p className="py-12 text-center text-xs text-zinc-500">
+                  Belum ada pesan masuk dari pengunjung.
+                </p>
+              ) : (
+                <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
+                  {chatSessions.map((sess) => {
+                    const lastMsg = sess.messages[sess.messages.length - 1];
+                    const isSelected = sess.sessionId === selectedSessionId;
+                    return (
+                      <div
+                        key={sess.sessionId}
+                        onClick={() => setSelectedSessionId(sess.sessionId)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedSessionId(sess.sessionId);
+                          }
+                        }}
+                        className={`cursor-pointer rounded-xl border p-3.5 transition ${
+                          isSelected
+                            ? 'border-brand-red bg-brand-red/15'
+                            : 'border-white/10 bg-black/40 hover:border-white/25'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="truncate text-sm font-bold text-white">
+                            {sess.visitorName || 'Pengunjung'}
+                          </span>
+                          {sess.unreadAdmin > 0 && (
+                            <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-black text-black">
+                              {sess.unreadAdmin} baru
+                            </span>
+                          )}
+                        </div>
+                        {sess.visitorContact && (
+                          <div className="mt-0.5 truncate font-mono text-[11px] text-brand-coral">
+                            {sess.visitorContact}
+                          </div>
+                        )}
+                        {lastMsg && (
+                          <p className="mt-1.5 line-clamp-2 text-xs text-zinc-400">
+                            <strong className="text-zinc-300">{lastMsg.senderName}:</strong>{' '}
+                            {lastMsg.text}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Ruang Chat & Balasan Real-Time */}
+            <div className="lg:col-span-8 flex flex-col justify-between rounded-2xl border border-white/10 bg-brand-charcoal p-6">
+              {!activeChatSession ? (
+                <div className="flex h-[460px] items-center justify-center text-sm text-zinc-500">
+                  Pilih salah satu sesi percakapan di sebelah kiri untuk membaca dan membalas.
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+                    <div>
+                      <h3 className="text-lg font-bold text-white">
+                        {activeChatSession.visitorName || 'Pengunjung'}
+                      </h3>
+                      <p className="text-xs text-zinc-400">
+                        {activeChatSession.visitorContact
+                          ? `Kontak: ${activeChatSession.visitorContact}`
+                          : 'Belum menyertakan nomor WhatsApp/Email'}{' '}
+                        • Bahasa: {activeChatSession.locale.toUpperCase()}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteChatSession(activeChatSession.sessionId)}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-xs text-zinc-400 hover:border-brand-red hover:text-brand-red transition"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Hapus Sesi</span>
+                    </button>
+                  </div>
+
+                  <div className="my-4 h-[360px] space-y-3 overflow-y-auto rounded-xl border border-white/10 bg-black/40 p-4">
+                    {activeChatSession.messages.map((m) => {
+                      const isAdmin = m.sender === 'admin';
+                      const isVisitor = m.sender === 'visitor';
+                      return (
+                        <div
+                          key={m.id}
+                          className={`flex flex-col ${isAdmin ? 'items-end' : 'items-start'}`}
+                        >
+                          <span className="mb-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+                            {m.senderName} •{' '}
+                            {new Date(m.timestamp).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                          <div
+                            className={`max-w-[80%] rounded-xl px-4 py-2.5 text-xs leading-relaxed ${
+                              isAdmin
+                                ? 'bg-emerald-600 text-white'
+                                : isVisitor
+                                  ? 'bg-brand-red text-white'
+                                  : 'border border-white/10 bg-zinc-900 text-zinc-300'
+                            }`}
+                          >
+                            {m.text}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <form onSubmit={handleSendAdminReply} className="space-y-3">
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                      <input
+                        type="text"
+                        value={adminSenderName}
+                        onChange={(e) => setAdminSenderName(e.target.value)}
+                        placeholder="Nama Pengirim (mis. Engineer Kodein)"
+                        className="w-full rounded-lg border border-white/15 bg-black/50 px-3 py-2.5 text-xs text-white sm:w-48"
+                      />
+                      <input
+                        type="text"
+                        value={adminReplyText}
+                        onChange={(e) => setAdminReplyText(e.target.value)}
+                        placeholder="Ketik balasan langsung ke layar pengunjung..."
+                        className="flex-1 rounded-lg border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white focus:border-brand-red focus:outline-none"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!adminReplyText.trim() || sendingReply}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-red px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-brand-redHover transition disabled:opacity-40"
+                      >
+                        <span>{sendingReply ? 'Mengirim...' : 'Balas Live'}</span>
+                        <Send className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

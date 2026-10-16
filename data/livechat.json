@@ -1,0 +1,45 @@
+{
+  "sessions": [
+    {
+      "sessionId": "kdn-mvbd7215-1cbj7x0a",
+      "visitorName": "Pengunjung",
+      "visitorContact": "",
+      "locale": "id",
+      "status": "active",
+      "unreadAdmin": 2,
+      "unreadVisitor": 0,
+      "createdAt": "2026-10-16T19:32:51.290Z",
+      "updatedAt": "2026-10-16T19:32:56.930Z",
+      "messages": [
+        {
+          "id": "vis-1792179171290-ea20",
+          "sender": "visitor",
+          "senderName": "Pengunjung",
+          "text": "Berapa estimasi biaya pembuatan website?",
+          "timestamp": "2026-10-16T19:32:51.290Z"
+        },
+        {
+          "id": "bot-1792179171291-1oo3",
+          "sender": "bot",
+          "senderName": "Kodein Concierge",
+          "text": "Kodein menyediakan 3 skema kerja sama: Fixed-Price (harga pasti sesuai ruang lingkup untuk website profil, toko online, atau sistem kustom), Dedicated Team (alokasi tim bulanan), serta Maintenance & Server SLA. Silakan tulis gambaran fitur yang Anda butuhkan atau tinggalkan nomor WhatsApp Anda, tim engineer kami segera merespons di chat ini.",
+          "timestamp": "2026-10-16T19:32:51.590Z"
+        },
+        {
+          "id": "vis-1792179176930-bwpb",
+          "sender": "visitor",
+          "senderName": "Pengunjung",
+          "text": "kontol",
+          "timestamp": "2026-10-16T19:32:56.930Z"
+        },
+        {
+          "id": "bot-1792179176931-sqs3",
+          "sender": "bot",
+          "senderName": "Kodein Concierge",
+          "text": "Terima kasih telah menghubungi Kodein. Pesan Anda sudah masuk ke dashboard LiveChat tim engineer kami. Silakan ceritakan kebutuhan proyek Anda atau cantumkan kontak WhatsApp/Email—tim kami dapat membalas langsung di ruang chat ini.",
+          "timestamp": "2026-10-16T19:32:57.230Z"
+        }
+      ]
+    }
+  ]
+}
