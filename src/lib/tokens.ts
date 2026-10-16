@@ -1,0 +1,47 @@
+export const DESIGN_TOKENS = {
+  brand: {
+    name: 'Kodein',
+    shortName: 'Kodein',
+    legalName: 'Kodein — Studio Pembuatan Website & Rekayasa Perangkat Lunak',
+    domain: 'https://www.kodein.id',
+    address: 'Gang Lampung 1, Indralaya Utara, Kabupaten Ogan Ilir, Sumatera Selatan, Indonesia',
+    email: 'halo@kodein.id',
+    irEmail: 'project@kodein.id',
+    phone: '+62 812 7000 8900',
+    socials: {
+      instagram: 'https://instagram.com',
+      linkedin: 'https://linkedin.com',
+    },
+    logos: {
+      faviconIco: '/favicon.ico',
+      mark: '/assets/brand/kodein-mark.svg',
+      markGradient: '/assets/brand/kodein-mark-gradient.svg',
+      markWhite: '/assets/brand/kodein-mark-white.svg',
+      markBlack: '/assets/brand/kodein-mark-black.svg',
+      profileDark: '/assets/brand/kodein-profile-dark.svg',
+      profileRed: '/assets/brand/kodein-profile-red.svg',
+      profileWhite: '/assets/brand/kodein-profile-white.svg',
+      horizontalLight: '/assets/brand/kodein-logo-horizontal.svg',
+      horizontalDark: '/assets/brand/kodein-logo-horizontal-dark.svg',
+      horizontalMonoWhite: '/assets/brand/kodein-logo-horizontal-mono-white.svg',
+    },
+  },
+  colors: {
+    black: '#000000',
+    dark: '#0A0A0A',
+    surface: '#141210',
+    red: '#EE2B10',
+    redHover: '#C91F08',
+    coral: '#FF5526',
+    white: '#FFFFFF',
+    lightBg: '#F8F9FA',
+  },
+  motion: {
+    easing: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    duration: {
+      fast: 0.25,
+      base: 0.5,
+      slow: 0.85,
+    },
+  },
+} as const;

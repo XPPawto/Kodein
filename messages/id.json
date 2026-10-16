@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "mainSite": "Kodein",
+    "dam": "Web & Aplikasi Mobile",
+    "dim": "Sistem Kustom & AI",
+    "ddmf": "Server & Maintenance",
+    "about": "Tentang Kodein",
+    "aboutDesc": "Cara kami bekerja, prinsip koding, dan tim di balik Kodein.",
+    "ecosystem": "Layanan Kami",
+    "governance": "Standar & Keamanan",
+    "governanceDesc": "Kualitas kode, garansi bug, kerahasiaan data (NDA), dan keamanan sistem.",
+    "wbs": "Whistleblowing System",
+    "wbsDesc": "Saluran pelaporan pelanggaran etika, privasi data, atau kecurangan secara rahasia.",
+    "vdp": "Vulnerability Disclosure Program",
+    "vdpDesc": "Program pelaporan celah keamanan teknis (Bug Bounty / Responsible Disclosure) pada sistem Kodein.",
+    "media": "Catatan & Karya",
+    "investor": "Model Kerja Sama",
+    "help": "Diskusi Proyek",
+    "cms": "CMS Studio",
+    "learnMore": "Lihat Detail",
+    "skipToContent": "Lewati ke konten utama"
+  },
+  "common": {
+    "learnMore": "Baca Selengkapnya",
+    "comingSoon": "Segera Hadir",
+    "pressRelease": "Studi Kasus",
+    "announcement": "Kabar Kodein",
+    "all": "Semua",
+    "searchPlaceholder": "Cari studi kasus, proyek, atau catatan teknis...",
+    "backToMedia": "Kembali ke Catatan & Karya",
+    "share": "Bagikan Halaman",
+    "copied": "Tautan Disalin",
+    "relatedArticles": "Tulisan Lainnya",
+    "readArticle": "Baca Cerita Lengkap",
+    "backToTop": "Kembali ke atas",
+    "cookieText": "Situs ini menggunakan penyimpanan lokal seperlunya agar pengaturan bahasa dan sesi Anda berjalan lancar.",
+    "cookieAccept": "Mengerti"
+  },
+  "footer": {
+    "mainSites": "Layanan Utama",
+    "mediaCenter": "Jelajahi",
+    "otherLinks": "Tautan Lainnya",
+    "pressReleases": "Catatan & Studi Kasus",
+    "investorRelations": "Model Kerja Sama",
+    "wbs": "Whistleblowing System",
+    "vdp": "Program Pengungkapan Kerentanan (VDP)",
+    "rights": "Seluruh hak cipta dilindungi."
+  }
+}

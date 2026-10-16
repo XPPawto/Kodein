@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "mainSite": "Kodein",
+    "dam": "Web & Mobile Apps",
+    "dim": "Custom Systems & AI",
+    "ddmf": "Cloud & Maintenance",
+    "about": "About Kodein",
+    "aboutDesc": "How we work, our engineering standards, and the people behind Kodein.",
+    "ecosystem": "Our Services",
+    "governance": "Standards & Security",
+    "governanceDesc": "Code quality, bug warranty, strict NDA protection, and system security.",
+    "wbs": "Whistleblowing System",
+    "wbsDesc": "Confidential channel for reporting ethical violations, NDA breaches, or misconduct.",
+    "vdp": "Vulnerability Disclosure Program",
+    "vdpDesc": "Responsible disclosure program for reporting security bugs across Kodein systems.",
+    "media": "Work & Notes",
+    "investor": "How We Partner",
+    "help": "Start a Project",
+    "cms": "CMS Studio",
+    "learnMore": "View Details",
+    "skipToContent": "Skip to main content"
+  },
+  "common": {
+    "learnMore": "Read More",
+    "comingSoon": "Coming Soon",
+    "pressRelease": "Case Study",
+    "announcement": "Studio News",
+    "all": "All",
+    "searchPlaceholder": "Search case studies, projects, or technical notes...",
+    "backToMedia": "Back to Work & Notes",
+    "share": "Share Page",
+    "copied": "Link Copied",
+    "relatedArticles": "More Stories",
+    "readArticle": "Read Full Story",
+    "backToTop": "Back to top",
+    "cookieText": "We use minimal local storage to remember your language preference and keep your browsing smooth.",
+    "cookieAccept": "Got It"
+  },
+  "footer": {
+    "mainSites": "Core Services",
+    "mediaCenter": "Explore",
+    "otherLinks": "Other Links",
+    "pressReleases": "Case Studies & Notes",
+    "investorRelations": "Partnership Models",
+    "wbs": "Whistleblowing System",
+    "vdp": "Vulnerability Disclosure Program",
+    "rights": "All rights reserved."
+  }
+}

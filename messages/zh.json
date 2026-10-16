@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "mainSite": "Kodein",
+    "dam": "网站与移动应用开发",
+    "dim": "定制软件与人工智能",
+    "ddmf": "云架构与系统运维",
+    "about": "关于 Kodein",
+    "aboutDesc": "我们的工作方式、代码标准以及 Kodein 背后的技术团队。",
+    "ecosystem": "服务与方案",
+    "governance": "工程与安全标准",
+    "governanceDesc": "代码质量保证、售后保修、严格的保密协议 (NDA) 与系统安全。",
+    "wbs": "违规举报系统 (WBS)",
+    "wbsDesc": "用于匿名举报职业道德违规、数据泄密或不当行为的保密通道。",
+    "vdp": "漏洞披露计划 (VDP)",
+    "vdpDesc": "面向安全研究人员与白帽黑客的负责任技术安全漏洞提交通道。",
+    "media": "案例与动态",
+    "investor": "合作模式",
+    "help": "项目咨询",
+    "cms": "CMS 后台",
+    "learnMore": "查看详情",
+    "skipToContent": "跳转到主要内容"
+  },
+  "common": {
+    "learnMore": "阅读更多",
+    "comingSoon": "即将上线",
+    "pressRelease": "项目案例",
+    "announcement": "最新动态",
+    "all": "全部",
+    "searchPlaceholder": "搜索项目案例、产品发布或技术笔记...",
+    "backToMedia": "返回案例与动态",
+    "share": "分享文章",
+    "copied": "链接已复制",
+    "relatedArticles": "相关阅读",
+    "readArticle": "阅读全文",
+    "backToTop": "返回顶部",
+    "cookieText": "我们使用必要的本地存储来保存您的语言偏好并确保流畅的浏览体验。",
+    "cookieAccept": "知道了"
+  },
+  "footer": {
+    "mainSites": "核心业务",
+    "mediaCenter": "探索更多",
+    "otherLinks": "其他链接",
+    "pressReleases": "项目案例与技术动态",
+    "investorRelations": "合作与交付模式",
+    "wbs": "违规举报系统 (WBS)",
+    "vdp": "漏洞披露计划 (VDP)",
+    "rights": "保留所有权利。"
+  }
+}
